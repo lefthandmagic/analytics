@@ -38,7 +38,8 @@ From the scripts folder Run as,
 
 ruby ingest.rb
 
-3) query.rb -> runs a test for all types of rest calls exposed through the application (should run ingest.rb with the provided seed data before this)
+3) query.rb -> runs a test for all types of rest calls exposed through the application 
+(should run ingest.rb with the provided seed data before this)
 
 From the scripts folder Run as,
 
@@ -52,21 +53,35 @@ This contains multiple http rest queries to test the data ingested and the prope
 
 Implementation
 --------------
-1) total number of trips -> uses an atomiclong to track total count across multiple threads
-2) total number of trips with date range -> uses concurrent hash map to store count of trips for individual day granularity(we trim the time component)
-3) total number of trips in last hour -> uses a sorted set to keep the trips in the last hour, on every ingest older entries are removed, retrieval uses a subset from sorted set
-4) total number of clients -> we track a unique concurrent hash set of client ids, size of set is number of clients
-5) total number of clients with date range -> track unique concurrent hash set by date, compute unique hash set across date range and return size of that set
-6) total miles per client -> keeps a running sum of miles per unique client
-7) total miles per client by date range -> keep a running sum of miles per unique client per day. Aggregate across date range.
-8) Average fare for a specific city -> I've broken down the overall space into 18 * 36 square which provides totally 648 cities, considering the natural order of (-90, +90) [18 blocks of 10 each] latitude   and (-180 + 180) [36 blocks of 10 each] longitude. We compute the city from the latitude longitute and track the average fare for a specific city.
-9) Average fare for a specific city by date range -> Same as above, but the average is tracked per city per day and aggregated on request
-10) Median Rating for a Driver -> We store the list of ratings using a balanced min and max heap. Access to median is o(1) by just looking at the heads of the heap.
+
+1) total number of trips -> uses an atomiclong to track total count across multiple threads 
+2) total number of trips with date range -> uses concurrent hash map to store count of trips for 
+   individual day granularity(we trim the time component) ~ does quick sum between dates O(n) if n days
+3) total number of trips in last hour -> uses a sorted set to keep the trips in the last hour, 
+   on every ingest older entries are removed, retrieval uses a subset from sorted set ~ O(1)
+4) total number of clients -> we track a unique concurrent hash set of client ids, size of set 
+   is number of clients ~ O(1)
+5) total number of clients with date range -> track unique concurrent hash set by date, 
+   compute unique hash set across date range and return size of that set ~ O(n) for n days
+6) total miles per client -> keeps a running sum of miles per unique client ~ O(1)
+7) total miles per client by date range -> keep a running sum of miles per unique client per day. 
+   Aggregate across date range. ~ O(n) for n days
+8) Average fare for a specific city -> I've broken down the overall space into 18 * 36 square which provides 
+   totally 648 cities, considering the natural order of (-90, +90) [18 blocks of 10 each] latitude   
+   and (-180 + 180) [36 blocks of 10 each] longitude. We compute the city from the latitude longitute and 
+   track the average fare for a specific city. ~ O(1) lookup
+9) Average fare for a specific city by date range -> Same as above, but the average is tracked per city per day 
+   and aggregated on request ~ O(n) for n days
+10) Median Rating for a Driver -> We store the list of ratings using a balanced min and max heap. 
+    Access to median is O(1) by just looking at the heads of the heap.
 
 
 Future Work/Ideas
 -----------------
 The solution does not currently horizontally scale across machines as it's limited to one service.
 This could be bypassed by hashing out the keyspace to multiple machines.
-For the sake of simplicity, all the data ingested is stored in memory, assuming infinite memory(which is obviously no production design).
-The right thing to do is to store all these hashes in a nosql database in sorted order(Hbase like). This would allow easy date range scans, and the queries can be optimized by distributing key space across a cluster of machines.
+For the sake of simplicity, all the data ingested is stored in memory, assuming 
+infinite memory(which is obviously no production design).
+The right thing to do is to store all these hashes in a nosql database in sorted order(Hbase like). 
+This would allow easy date range scans, and the queries can be optimized by distributing key space 
+across a cluster of machines.
