@@ -59,7 +59,7 @@ Implementation
 5) total number of clients with date range -> track unique concurrent hash set by date, compute unique hash set across date range and return size of that set
 6) total miles per client -> keeps a running sum of miles per unique client
 7) total miles per client by date range -> keep a running sum of miles per unique client per day. Aggregate across date range.
-8) Average fare for a specific city -> I've broken down the overall space into 10 * 10 square which provides totally 162 cities, considering the natural order of (-90, +90) latitude   and (-180 + 180) longitude. We compute the city from the latitude longitute and track the average fare for a specific city.
+8) Average fare for a specific city -> I've broken down the overall space into 18 * 36 square which provides totally 648 cities, considering the natural order of (-90, +90) [18 blocks of 10 each] latitude   and (-180 + 180) [36 blocks of 10 each] longitude. We compute the city from the latitude longitute and track the average fare for a specific city.
 9) Average fare for a specific city by date range -> Same as above, but the average is tracked per city per day and aggregated on request
 10) Median Rating for a Driver -> We store the list of ratings using a balanced min and max heap. Access to median is o(1) by just looking at the heads of the heap.
 
