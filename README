@@ -7,7 +7,7 @@ Build
 ------
 Pre-reqs are java & maven.
 The project is mavenized, and uses the normal maven build process.
-To start the application run Main.class as a java application
+To start the application run Main.class as a java application.
 
 Scripts
 --------
