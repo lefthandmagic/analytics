@@ -20,10 +20,32 @@ The above invokes the server and it waits, for http requests to ingest/request r
 Scripts
 --------
 Various helper scripts are present under the script directory.
-The scripts are in ruby, and you will need to have ruby installed.
-1) seed_data.rb -> generates seed data to work with.
-2) ingest.rb -> ingest a sample set of seed data in test_data folder
+
+The scripts are in ruby, and you will need to have ruby installed. 
+All the scripts have comments to describe their purpose, and they are briefly explained here.
+
+1) seed_data.rb -> generates a sample set seed data to work with. 
+
+From the scripts folder Run as,
+
+ruby seed_data.rb 
+
+This generates the seed data into tmp/seed_data.txt (a sample test seed data is attached in test_data folder).
+
+2) ingest.rb -> ingest a sample set of seed data in test_data folder into the server.
+
+From the scripts folder Run as,
+
+ruby ingest.rb
+
 3) query.rb -> runs a test for all types of rest calls exposed through the application (should run ingest.rb with the provided seed data before this)
+
+From the scripts folder Run as,
+
+ruby query.rb
+
+Read the comments on this file for more details.
+This contains multiple http rest queries to test the data ingested and the proper working of the application.
 
 Implementation
 --------------
