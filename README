@@ -47,6 +47,9 @@ ruby query.rb
 Read the comments on this file for more details.
 This contains multiple http rest queries to test the data ingested and the proper working of the application.
 
+
+@note:while executing ingest.rb and query.rb the application should be started.
+
 Implementation
 --------------
 1) total number of trips -> uses an atomiclong to track total count across multiple threads
