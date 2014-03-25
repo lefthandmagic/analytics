@@ -6,8 +6,12 @@ This is a project that tries to provide analytics over uber trips
 Build
 ------
 Pre-reqs are java & maven.
-The project is mavenized, and uses the normal maven build process.
+The project is mavenized, and uses the maven build process.
 To start the application run Main.class as a java application.
+
+Simple Steps to build
+1) After cloning the project, navigate to the analytics-engine folder and run
+mvn clean compile assembly:single
 
 Scripts
 --------
